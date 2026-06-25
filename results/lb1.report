@@ -1,0 +1,29 @@
+
+        =============== Load Balancer Report ===============
+        Traffic Summary:
+        ------------------------
+        Client Input:  141 packets (141 bytes)
+        Server Input:  205 packets (205 bytes)
+        Client Output: 141 packets (141 bytes)
+        Server Output: 149 packets (149 bytes)
+        
+        Packet Rates:
+        ------------------------
+        Input Rate (pps):  0.460074601381
+        Output Rate (pps): 0.469939873831
+        
+        Protocol Breakdown:
+        ------------------------
+        ARP Requests:     37
+        ARP Responses:    24
+        IP Packets:       230
+        TCP Packets:      229
+        ICMP Echo Req:    1
+        ICMP Echo Reply:  0
+        
+        Error Statistics:
+        ------------------------
+        Dropped Non-IP:   55
+        Dropped Non-TCP:  0
+        Total Dropped:    55
+        ====================================================

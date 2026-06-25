@@ -1,0 +1,131 @@
+starting the test!
+sudo python ./topology/topology_test.py
+No report files found
+Starting network services...
+All LLM HTTP servers started.
+
+============== RUNNING AUTOMATED TESTS ==============
+
+Waiting for network to initialize...
+
+----- Test 1: Basic Connectivity Tests -----
+Ping from h1 to 10.0.0.51: Return code = 0
+PASS: Ping test from h1 to 10.0.0.51 succeeded as expected
+Ping from llm1 to 100.0.0.41: Return code = 0
+PASS: Ping test from llm1 to 100.0.0.41 succeeded as expected
+Ping from h1 to 100.0.0.40: Return code = 1
+PASS: Ping test from h1 to 100.0.0.40 failed as expected
+Ping from h1 to 100.0.0.45: Return code = 0
+PASS: Ping test from h1 to 100.0.0.45 succeeded as expected
+
+----- Test 2: NAPT Functionality -----
+
+Testing HTTP POST request to 100.0.0.45:80
+Expected result: SUCCESS
+Executing: curl --connect-timeout 60 --max-time 60 -v -X POST -d 'test_data' 100.0.0.45:80 > /dev/null 2>&1; echo $?
+Curl POST from h1 to 100.0.0.45:80: Return code = 0
+Request took 28.51 seconds
+PASS: Curl POST from h1 to 100.0.0.45:80 succeeded as expected
+
+Testing NAPT translation from h2 to 100.0.0.45:80
+Executing: curl --connect-timeout 60 --max-time 60 -v -X POST -d 'napt_test' 100.0.0.45:80
+Request took 29.44 seconds
+Return code: 0
+PASS: NAPT successfully translated request from h2 to 100.0.0.45:80
+
+----- Test 3: Load Balancer Functionality -----
+
+Testing load balancing with 6 requests to 100.0.0.45:80
+Note: Using POST method as GET is blocked by IDS
+
+Request 1/6:
+Executing: curl --connect-timeout 60 --max-time 60 -s -X POST -d 'request_1' 100.0.0.45:80
+Request took 27.13 seconds
+Response: {"method": "POST", "server_id": "3", "received": "request_1"}...
+Parsed JSON: {'method': 'POST', 'server_id': '3', 'received': 'request_1'}
+Request 1: Served by LLM Server #3
+
+Request 2/6:
+Executing: curl --connect-timeout 60 --max-time 60 -s -X POST -d 'request_2' 100.0.0.45:80
+Request took 60.01 seconds
+Response: ...
+Request 2: Could not identify server in response
+
+Request 3/6:
+Executing: curl --connect-timeout 60 --max-time 60 -s -X POST -d 'request_3' 100.0.0.45:80
+Request took 60.01 seconds
+Response: ...
+Request 3: Could not identify server in response
+
+Request 4/6:
+Executing: curl --connect-timeout 60 --max-time 60 -s -X POST -d 'request_4' 100.0.0.45:80
+Request took 26.67 seconds
+Response: {"method": "POST", "server_id": "3", "received": "request_4"}...
+Parsed JSON: {'method': 'POST', 'server_id': '3', 'received': 'request_4'}
+Request 4: Served by LLM Server #3
+
+Request 5/6:
+Executing: curl --connect-timeout 60 --max-time 60 -s -X POST -d 'request_5' 100.0.0.45:80
+Request took 60.01 seconds
+Response: ...
+Request 5: Could not identify server in response
+
+Request 6/6:
+Executing: curl --connect-timeout 60 --max-time 60 -s -X POST -d 'request_6' 100.0.0.45:80
+Request took 0.03 seconds
+Response: {"method": "POST", "server_id": "2", "received": "request_6"}...
+Parsed JSON: {'method': 'POST', 'server_id': '2', 'received': 'request_6'}
+Request 6: Served by LLM Server #2
+
+Average request time: 38.98 seconds
+PASS: Load balancer distributed requests among 2 servers
+Distribution: {'3': 2, '2': 1}
+
+----- Test 4: IDS Functionality Tests -----
+Testing IDS with POST request containing payload: 'legitimate_data'
+Expected result: ALLOW
+Executing: curl --connect-timeout 60 --max-time 60 -v -X POST -d 'legitimate_data' 100.0.0.45:80 > /dev/null 2>&1; echo $?
+IDS Test: Curl POST with payload 'legitimate_data' from h1 to 100.0.0.45:80: Return code = 0
+PASS: IDS correctly allowed legitimate POST request with payload 'legitimate_data'
+Testing IDS with PUT request containing payload: 'cat /etc/passwd'
+Expected result: BLOCK
+Executing: curl --connect-timeout 60 --max-time 60 -v -X PUT -d 'cat /etc/passwd' 100.0.0.45:80 > /dev/null 2>&1; echo $?
+IDS Test: Curl PUT with payload 'cat /etc/passwd' from h1 to 100.0.0.45:80: Return code = 28
+PASS: IDS correctly blocked malicious PUT request with payload 'cat /etc/passwd'
+Testing IDS with PUT request containing payload: 'DELETE FROM users'
+Expected result: BLOCK
+Executing: curl --connect-timeout 60 --max-time 60 -v -X PUT -d 'DELETE FROM users' 100.0.0.45:80 > /dev/null 2>&1; echo $?
+IDS Test: Curl PUT with payload 'DELETE FROM users' from h1 to 100.0.0.45:80: Return code = 28
+PASS: IDS correctly blocked malicious PUT request with payload 'DELETE FROM users'
+Testing IDS with PUT request containing payload: 'INSERT INTO users VALUES'
+Expected result: BLOCK
+Executing: curl --connect-timeout 60 --max-time 60 -v -X PUT -d 'INSERT INTO users VALUES' 100.0.0.45:80 > /dev/null 2>&1; echo $?
+IDS Test: Curl PUT with payload 'INSERT INTO users VALUES' from h1 to 100.0.0.45:80: Return code = 28
+PASS: IDS correctly blocked malicious PUT request with payload 'INSERT INTO users VALUES'
+Testing IDS with DELETE request containing payload: ''
+Expected result: BLOCK
+Executing: curl --connect-timeout 60 --max-time 60 -v -X DELETE 100.0.0.45:80 > /dev/null 2>&1; echo $?
+IDS Test: Curl DELETE with payload '' from h1 to 100.0.0.45:80: Return code = 28
+PASS: IDS correctly blocked malicious DELETE request with payload ''
+
+----- Test 5: HTTP Method Tests -----
+
+Testing HTTP GET request to 100.0.0.45:80
+Expected result: FAIL
+Executing: curl --connect-timeout 60 --max-time 60 -v -X GET 100.0.0.45:80 > /dev/null 2>&1; echo $?
+Curl GET from h1 to 100.0.0.45:80: Return code = 28
+Request took 60.01 seconds
+PASS: Curl GET from h1 to 100.0.0.45:80 failed as expected
+PASS: GET request correctly blocked by IDS
+
+============== TEST SUMMARY ==============
+Passed: 13
+Failed: 0
+Total: 13
+Success rate: 100.00%
+=========================================
+
+Verifying captured files:
+mininet> 
+Interrupt
+mininet> 

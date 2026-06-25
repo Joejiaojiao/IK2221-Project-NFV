@@ -1,0 +1,26 @@
+
+
+=================== NAPT Report ===================
+
+Input UserZone packets:  291
+Input InferZone packets: 164
+
+Output UserZone packets:  138
+Output InferZone packets: 258
+
+UserZone TCP packets:  236
+UserZone ICMP packets: 2
+
+InferZone TCP packets:  120
+InferZone ICMP packets: 1
+
+Dropped UserZone Other:      36
+Dropped UserZone ICMP Reply: 0
+Dropped UserZone Other IP:   0
+
+Dropped InferZone Other:     23
+Dropped InferZone ICMP Req:  0
+Dropped InferZone Other IP:  0
+
+===================================================
+

@@ -1,0 +1,45 @@
+
+      ====================== Intrusion Detection System Report ======================
+      
+      System Status: Active
+      Monitoring Interfaces: ids-eth1, ids-eth3, ids-eth2
+      
+      -------------- Traffic Statistics --------------
+      Input Packet rate (pps): 0.665203630158
+      Output Packet rate (pps): 0.441221049117
+
+      Total incoming packets: 431
+      Total outgoing packets: 272
+ 
+      IPv4 packet distribution:
+        - From switch: 237
+        - From server: 121
+        - Total: 358
+      
+      Protocol distribution:
+        - ARP requests: 21
+        - ARP responses: 20
+        - ICMP traffic: 1
+        - TCP ACK packets: 46 
+        - TCP SYN packets: 14
+      
+      HTTP traffic analysis:
+        - Total HTTP packets: 176
+        - HTTP PUT requests: 54
+        - HTTP POST requests: 49 
+      
+      -------------- Security Events --------------
+      Attack patterns detected:
+        - Password file access attempts: 18
+        - Log directory access attempts: 0
+        - SQL INSERT statements: 18
+        - SQL UPDATE statements: 0
+        - SQL DELETE statements: 18
+        - Total attacks detected: 54
+      
+      Traffic handling:
+        - Packets forwarded to inspection: 127
+        - Packets dropped: 32
+      
+      ========================================================================
+    
